@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mahasiswa - InfoPoinUnklab</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body onload="loadDashboard()">
+
+    <div class="header">
+        <h3>INFO POINT UNKLAB</h3>
+        <div class="profil">
+            <span id="nama-user" style="font-family: 'poopins', sans-serif;">Nama Mahasiswa</span>
+            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-layout">
+        
+        <div class="sidebar">
+            <h4 style="text-align: center;">Navigasi</h4>
+            <a href="dashboard.html" class="sidebar-link active">Dashboard Point</a>
+            
+            <hr class="sidebar-divider">
+
+            <h4 style="text-align: center;">Hubungi Admin</h4>
+            <div class="form-group">
+                <label for="keluhan-text">Kirim Keluhan:</label>
+                <textarea id="keluhan-text" rows="5" placeholder="Tulis keluhan atau pertanyaan Anda di sini..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="keluhan-bukti">Sertakan Bukti (Opsional):</label>
+                <input type="file" id="keluhan-bukti" class="input-file" accept="image/*">
+            </div>
+            <button class="btn btn-sukses" style="width: 100%;" onclick="handleSimpanKeluhan()">Kirim</button>
+            <p id="keluhan-success" class="success" style="font-size: 14px;"></p>
+        </div>
+
+        <div class="main-content">
+            <div class="container">
+                <h2>Dashboard Anda</h2>
+
+                <div id="status-box" class="status-box">
+                    <p>Total Poin Pelanggaran Anda</p>
+                    <h1 id="total-poin">0</h1>
+                </div>
+
+                <div class="riwayat-box">
+                    <h3>Aktivitas Poin Terbaru</h3>
+                    <div id="riwayat-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+        
+    </div> <script src="app.js"></script>
+    <script>
+        function loadDashboard() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'mahasiswa') {
+                window.location.href = 'index.html';
+                return;
+            }
+            document.getElementById('nama-user').textContent = user.nama;
+            const allLogs = JSON.parse(localStorage.getItem('log_pelanggaran'));
+            const masterPelanggaran = JSON.parse(localStorage.getItem('master_pelanggaran'));
+            const userLogs = allLogs.filter(log => log.nim === user.nim);
+            let totalPoin = 0;
+            const riwayatContainer = document.getElementById('riwayat-list');
+            riwayatContainer.innerHTML = ''; 
+            if (userLogs.length === 0) {
+                riwayatContainer.innerHTML = '<p>Anda bersih! Belum ada pelanggaran.</p>';
+            }
+            userLogs.forEach(log => {
+                const pelanggaran = masterPelanggaran.find(p => p.id === log.id_pelanggaran);
+                totalPoin += pelanggaran.poin;
+                riwayatContainer.innerHTML += `
+                    <div class="riwayat-item">
+                        <div>
+                            <strong>${pelanggaran.nama}</strong>
+                            <div class="detail">${log.tanggal} - ${log.keterangan}</div>
+                        </div>
+                        <strong class="poin-merah">+${pelanggaran.poin} Poin</strong>
+                    </div>
+                `;
+            });
+            document.getElementById('total-poin').textContent = totalPoin;
+            const statusBox = document.getElementById('status-box');
+            const statusPoin = document.getElementById('status-poin');
+            if (totalPoin >= 50) {
+                statusPoin.textContent = 'PEMBINAAN';
+                statusBox.className = 'status-box status-merah';
+            } else if (totalPoin >= 21) {
+                statusPoin.textContent = 'PERINGATAN';
+                statusBox.className = 'status-box status-kuning';
+            } else {
+                statusPoin.textContent = 'AMAN';
+                statusBox.className = 'status-box status-hijau';
+            }
+        }
+    </script>
+</body>
+</html>

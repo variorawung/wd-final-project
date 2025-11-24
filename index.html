@@ -1,1 +1,57 @@
-.
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - InfoPointUnklab</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth">
+    <div class="container">
+        <div class="login-box">
+            <h2 style="font-family: 'poppins', sans-serif; font-size: large;">INFO POINT UNKLAB</h2>
+            <p style="font-family: 'Inter', sans-serif;">Silakan login untuk melanjutkan</p>
+            
+            <div class="form-group">
+                <label for="nim" style="font-family: 'Inter', sans-serif;">NIM / ID Admin</label>
+                <input type="text" id="nim" placeholder="...">
+            </div>
+            
+            <div class="form-group">
+                <label for="password" style="font-family: 'Inter', sans-serif;">Password</label>
+                <input type="password" id="password" placeholder="...">
+            </div>
+            
+            <p id="error-message" class="error"></p>
+            
+            <button class="btn" onclick="handleLogin()" style="font-family: 'poppins', sans-serif; font-size: large;">Login</button>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.getElementById('loginButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        const password = document.getElementById('inputPassword3').value;
+        if(password === 'admin123') {
+            Swal.fire({
+                title: 'Login Berhasil!',
+                text: 'Selamat datang!',
+                icon: 'success'
+            }).then(() => {
+                window.location.href = 'dashboard.html';
+            });
+        } else {
+            Swal.fire({
+                title: 'Login Gagal!',
+                text: 'Password salah. Silakan coba lagi.',
+                icon: 'error'
+            });
+        }
+    });
+    </script>
+</body>
+</html>

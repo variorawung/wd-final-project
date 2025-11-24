@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Keluhan - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body onload="loadKeluhanPage()">
+
+    <div class="header">
+        <h3>INFO POINT UNKLAB</h3>
+        <div class="profil">
+            <span id="nama-user" style="font-family: 'poppins', sans-serif;">Admin</span>
+            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-layout">
+        
+        <div class="sidebar">
+            <h4>Menu Admin</h4>
+            <a href="admin.html" class="sidebar-link">Input Poin Mahasiswa</a>
+            <a href="keluhan.html" class="sidebar-link active">Daftar Keluhan</a>
+        </div>
+
+        <div class="main-content">
+            <div class="container">
+                <h2>Daftar Keluhan Mahasiswa</h2>
+                <div id="keluhan-list-container">
+                    </div>
+            </div>
+        </div>
+
+    </div> <script src="app.js"></script>
+    <script>
+        // Fungsi saat halaman ini dimuat
+        function loadKeluhanPage() {
+            const user = getCurrentUser();
+            // Jika bukan admin, tendang ke index
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Set nama admin di header
+            document.getElementById('nama-user').textContent = user.nama;
+
+            // Muat daftar keluhan
+            loadDaftarKeluhan();
+        }
+
+       // GANTI FUNGSI LAMA ANDA DENGAN YANG INI
+function loadDaftarKeluhan() {
+    const allKeluhan = JSON.parse(localStorage.getItem('log_keluhan'));
+    const container = document.getElementById('keluhan-list-container');
+    container.innerHTML = ''; // Kosongkan dulu
+
+    if (allKeluhan.length === 0) {
+        container.innerHTML = '<p>Belum ada keluhan yang masuk.</p>';
+        return;
+    }
+
+    // Tampilkan keluhan dari yang paling baru
+    allKeluhan.reverse().forEach(k => {
+        
+        // --- TAMBAHAN BARU ---
+        // Cek apakah ada bukti. Jika ada, buat elemen HTML-nya
+        let buktiHtml = '';
+        if (k.bukti) {
+            buktiHtml = `
+                <div class="keluhan-bukti">
+                    <strong>Bukti Terlampir:</strong> 
+                    <span>${k.bukti}</span>
+                </div>
+            `;
+        }
+        // --- AKHIR TAMBAHAN ---
+
+        container.innerHTML += `
+            <div class="keluhan-item">
+                <div class="keluhan-header">
+                    <strong>${k.nama}</strong> (${k.nim}) - ${k.tanggal}
+                </div>
+                <div class="keluhan-body">
+                    ${k.keluhan}
+                    ${buktiHtml} </div>
+                <div class="keluhan-footer">
+                    <span>Status: <span class="status-baru">${k.status}</span></span>
+                    <button class="btn-delete" onclick="klikHapusKeluhan(${k.id_keluhan})">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+        // --- FUNGSI BARU ---
+        // Jembatan untuk menghapus KELUHAN DAN me-refresh daftar
+        function klikHapusKeluhan(keluhan_id) {
+            // Panggil fungsi global dari app.js
+            const sukses = handleDeleteKeluhan(keluhan_id);
+            
+            // Jika sukses menghapus (tidak di-cancel)
+            if (sukses) {
+                // Muat ulang daftar keluhan di halaman ini
+                loadDaftarKeluhan();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@400;600&display=swap');
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    color: #000000;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 60%);
+    color:var(--text);
+}
+.header h3 { margin: 0; }
+.header .profil { display: flex; align-items: center; gap: 15px; }
+
+.btn-logout {
+    background-color: #ff0019;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.login-box {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box; /* Penting! */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.btn {
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 60%);
+    color:var(--text);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+.btn-sukses { background-color: #28a745; }
+.error { color: #dc3545; font-weight: bold; }
+.success { color: #28a745; font-weight: bold; }
+
+/* Dashboard Mahasiswa */
+.status-box {
+    text-align: center;
+    padding: 30px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #333;
+    border: 1px solid;
+}
+.status-box h1 { margin: 0; font-size: 48px; }
+.status-box p { margin: 5px 0 0; font-size: 20px; }
+
+.status-hijau { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+.status-kuning { background-color: #fff3cd; border-color: #ffeeba; color: #856404; }
+.status-merah { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+
+.riwayat-box { margin-top: 20px; }
+.riwayat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.riwayat-item .detail { font-size: 14px; color: #666; }
+.poin-merah { color: #dc3545; font-weight: bold; font-size: 20px; }
+
+/* Admin */
+.hidden { display: none; }
+.profil-mhs {
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 60%);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px dashed #ccc;
+    line-height: 1.6;
+}
+
+/* === STYLE BARU UNTUK SIDEBAR & KELUHAN === */
+
+/* Layout baru untuk dashboard mahasiswa */
+.dashboard-layout {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+}
+.sidebar {
+    width: 280px;
+    background-color: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 60%);
+    padding: 20px;
+    margin: 20px 0 20px 20px; /* Margin sama dgn container */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.sidebar h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-family: 'inter', sans-serif;
+}
+.sidebar .sidebar-link {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 60%);;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+.sidebar .sidebar-link.active {
+    background-color: gray;
+    font-weight: bold;
+}
+.sidebar .sidebar-divider {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+.main-content {
+    flex: 1;
+}
+/* Menghapus margin atas-bawah container di main-content
+   agar sejajar dengan sidebar */
+.main-content .container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Style untuk daftar keluhan di admin */
+.keluhan-item {
+    background-color: #f9f9f9;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.keluhan-header {
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.keluhan-body {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* Agar format teks/paragraf tetap rapi */
+}
+.keluhan-footer {
+    font-size: 13px;
+    color: #333;
+}
+.status-baru {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+
+/* Styling Login dari file asli Anda */
+:root{
+    --bg-start: #0f172a;
+    --bg-end: #0b2545;
+    --card-bg: rgba(255,255,255,0.06);
+    --card-border: rgba(255,255,255,0.08);
+    --glass: rgba(255,255,255,0.04);
+    --accent-1: #4f46e5;
+    --accent-2: #06b6d4;
+    --text: #e6eef8;
+    --muted: #b9c6d8;
+    --error: #ff6b6b;
+    --radius: 14px;
+    --shadow: 0 8px 30px rgba(2,6,23,0.6);
+    font-family: p, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Base */
+* { box-sizing: border-box; }
+html,body { height:100%; }
+
+/* Styles apply only when element with class .auth wraps the page/login area */
+.auth {
+    margin: 0;
+    min-height: 100vh;
+    background: 
+        /* Overlay gelap untuk kontras teks */
+        linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(11, 37, 69, 0.85) 60%),
+        /* Gambar background */
+        url('pioneer_chapel.jpg') 
+        center/cover no-repeat;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+/* Layout container (scoped) */
+.auth .container{
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
+    max-width: 980px;
+    position: relative; /* untuk ::before absolute */
+}
+
+/* letakkan dekorasi tanpa memengaruhi ukuran container */
+.auth .container::before{
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background:
+    radial-gradient(600px 200px at 10% 10%, rgba(79,70,229,0.06), transparent 10%),
+    radial-gradient(400px 140px at 90% 90%, rgba(6,182,212,0.04), transparent 10%);
+    border-radius: 18px;
+    z-index: 0;
+}
+
+/* pastikan login-box di atas dekorasi dan cukup gelap agar teks terang terlihat */
+/* Jika ingin kartu terang dengan teks gelap, gunakan alternatif yang dikomentari */
+.auth .login-box{
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(6,16,48,0.92), rgba(11,37,69,0.95));
+    color: var(--text);
+}
+
+/* Alternatif: kalau ingin login-box putih, ganti warna teks supaya terbaca:
+.auth .login-box{
+    background: #fff;
+    color: #0b2545;
+}
+*/
+
+/* Header */
+.auth .login-box h2{
+    margin:0 0 6px 0;
+    font-size:20px;
+}
+.auth .login-box p.lead{
+    margin:0 0 18px 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* Form groups */
+.auth .form-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:14px;
+    position:relative;
+}
+.auth .form-group label{ font-size:13px; color:var(--muted); user-select:none; }
+.auth .form-group input{
+    appearance:none;
+    border:1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    color:var(--text);
+    padding:12px 14px;
+    border-radius:10px;
+    outline:none;
+    font-size:14px;
+    transition: box-shadow .18s ease, transform .08s ease, border-color .12s ease;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.02);
+}
+.auth .form-group input::placeholder{ color: rgba(230,238,248,0.18); }
+.auth .form-group input:focus{
+    border-color: rgba(79,70,229,0.9);
+    box-shadow: 0 6px 20px rgba(79,70,229,0.12), 0 0 0 4px rgba(79,70,229,0.06);
+    transform: translateY(-1px);
+}
+
+/* Small helpers */
+.auth .small{ font-size:12px; color:var(--muted); }
+
+/* Error message */
+.auth .error{
+    color:var(--error);
+    font-size:13px;
+    margin:8px 0 12px 0;
+    min-height:18px;
+    opacity:0;
+    transform:translateY(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+}
+.auth .error.show{ opacity:1; transform:none; }
+
+/* Primary button */
+.auth .btn{
+    width:100%;
+    border:0;
+    padding:12px 16px;
+    border-radius:12px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    color:white;
+    font-weight:600;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    box-shadow: 0 8px 24px rgba(6,16,48,0.48);
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.auth .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 36px rgba(6,16,48,0.56); }
+.auth .btn:active{ transform: translateY(0); }
+.auth .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* Footer small text */
+.auth .login-footer{    
+    margin-top:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+.auth .login-footer a{ color:var(--muted); text-decoration:none; font-size:13px; }
+.auth .login-footer a:hover{ color:var(--text); text-decoration:underline; }
+
+/* Responsive: collapse to single column on small screens */
+@media (max-width:880px){
+    .auth .container{ grid-template-columns: 1fr; gap:20px; padding:0; }
+    .auth .container > div:first-child{ order:2; padding:22px; }
+    .auth .login-box{ order:1; }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+}
+
+#riwayat-admin-list-container {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    border-top: 1px dashed #ccc;
+    padding-top: 20px;
+}
+
+#riwayat-admin-list-container h4 {
+    margin-top: 0;
+}
+
+.riwayat-admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.riwayat-admin-item .info {
+    flex: 1; /* Ambil sisa ruang */
+}
+
+.riwayat-admin-item .info .detail {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.btn-delete {
+    background-color: #ff0019; /* Merah */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 15px; /* Jarak dari teks */
+}
+
+.btn-delete:hover {
+    background-color: #ff0019; /* Merah lebih gelap */
+}
+
+.keluhan-footer {
+    font-size: 13px;
+    color: #777;
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
+    margin-top: 10px; 
+}
+
+.input-file {
+    width: 100%;
+    font-size: 14px;
+}
+/* Chrome, Safari, Edge */
+.input-file::file-selector-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-right: 10px;
+}
+/* Firefox */
+.input-file {
+    color: #333;
+}
+
+/* Style untuk tampilan bukti di halaman admin */
+.keluhan-bukti {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.keluhan-bukti span {
+    color: #0056b3; /* Warna link */
+    font-family: monospace;
+}

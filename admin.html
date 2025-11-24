@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Poin - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body onload="loadAdminPage()">
+
+    <div class="header">
+        <h3>INFO POINT UNKLAB</h3>
+        <div class="profil">
+            <span id="nama-user" style="font-family: 'poppins', sans-serif;">Admin</span>
+            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-layout">
+
+        <div class="sidebar">
+            <h4>Menu Admin</h4>
+            <a href="admin.html" class="sidebar-link active">Input Poin Mahasiswa</a>
+            <a href="keluhan.html" class="sidebar-link">Daftar Keluhan</a>
+        </div>
+
+        <div class="main-content">
+            <div class="container">
+                <h2>Input Poin Pelanggaran Baru</h2>
+
+                <div class="form-group">
+                    <label for="nim-cari">Cari Mahasiswa (Ketik NIM)</label>
+                    <input type="text" id="nim-cari" placeholder="Contoh: 123456">
+                    <button class="btn" onclick="cariMahasiswa()">Cari</button>
+                </div>
+
+                <hr>
+
+                <div id="form-input-pelanggaran" class="hidden">
+                    
+                    <div class="profil-mhs" id="profil-mhs">
+                        </div>
+
+                    <div id="riwayat-admin-list-container">
+                        <h4>Riwayat Poin Saat Ini:</h4>
+                        <div id="riwayat-admin-list">
+                            </div>
+                    </div>
+
+                    <input type="hidden" id="nim-terpilih">
+
+                    <h4>Tambah Pelanggaran Baru:</h4>
+                    <div class="form-group">
+                        <label for="id_pelanggaran">Jenis Pelanggaran *</label>
+                        <select id="id_pelanggaran">
+                            </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal Kejadian *</label>
+                        <input type="date" id="tanggal">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keterangan">Keterangan Tambahan</label>
+                        <textarea id="keterangan" rows="3" placeholder="..."></textarea>
+                    </div>
+                    
+                    <p id="admin-success" class="success"></p>
+                    <p id="admin-error" class="error"></p>
+
+                    <button class="btn btn-sukses" onclick="simpanPelanggaran()">Simpan Pelanggaran</button>
+                </div>
+            </div>
+        </div> </div> <script src="app.js"></script>
+    <script>
+        // Fungsi saat halaman admin dimuat
+        function loadAdminPage() {
+            const user = getCurrentUser();
+            // Jika bukan admin, tendang ke index
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('nama-user').textContent = user.nama;
+            document.getElementById('tanggal').valueAsDate = new Date(); // Set tanggal hari ini
+
+            // Isi dropdown pilihan pelanggaran
+            const masterPelanggaran = JSON.parse(localStorage.getItem('master_pelanggaran'));
+            const selectEl = document.getElementById('id_pelanggaran');
+            selectEl.innerHTML = '<option value="">-- Pilih Jenis Pelanggaran --</option>'; // Tambahkan opsi default
+            
+            masterPelanggaran.forEach(p => {
+                selectEl.innerHTML += `
+                    <option value="${p.id}">${p.nama} (+${p.poin} Poin)</option>
+                `;
+            });
+            
+            // KITA HAPUS loadDaftarKeluhan() DARI SINI
+        }
+
+        // Fungsi untuk tombol cari mahasiswa (TETAP SAMA)
+        function cariMahasiswa() {
+            const nimCari = document.getElementById('nim-cari').value;
+            const users = JSON.parse(localStorage.getItem('mahasiswa'));
+            
+            const user = users.find(u => u.nim === nimCari && u.role === 'mahasiswa');
+
+            const formInput = document.getElementById('form-input-pelanggaran');
+            const profilBox = document.getElementById('profil-mhs');
+            
+            if (user) {
+                profilBox.innerHTML = `
+                    <strong>Mahasiswa Ditemukan:</strong><br>
+                    Nama: ${user.nama}<br>
+                    NIM: ${user.nim}<br>
+                    Jurusan: ${user.jurusan}
+                `;
+                document.getElementById('nim-terpilih').value = user.nim;
+                formInput.classList.remove('hidden');
+                document.getElementById('admin-error').textContent = '';
+                document.getElementById('admin-success').textContent = '';
+
+                // PANGGILAN BARU
+                loadRiwayatAdmin(user.nim);
+
+            } else {
+                alert('Mahasiswa dengan NIM tersebut tidak ditemukan.');
+                formInput.classList.add('hidden');
+            }
+        }
+
+        // Fungsi untuk memuat riwayat poin (TETAP SAMA)
+        function loadRiwayatAdmin(nim) {
+            const allLogs = JSON.parse(localStorage.getItem('log_pelanggaran'));
+            const masterPelanggaran = JSON.parse(localStorage.getItem('master_pelanggaran'));
+            const container = document.getElementById('riwayat-admin-list');
+            container.innerHTML = ''; // Kosongkan
+
+            const userLogs = allLogs.filter(log => log.nim === nim);
+
+            if (userLogs.length === 0) {
+                container.innerHTML = '<p>Mahasiswa ini belum memiliki poin.</p>';
+                return;
+            }
+
+            userLogs.reverse().forEach(log => {
+                const pelanggaran = masterPelanggaran.find(p => p.id === log.id_pelanggaran);
+                container.innerHTML += `
+                    <div class="riwayat-admin-item">
+                        <div class="info">
+                            <strong>${pelanggaran.nama}</strong> (+${pelanggaran.poin} Poin)
+                            <div class="detail">${log.tanggal} - ${log.keterangan || 'Tidak ada keterangan'}</div>
+                        </div>
+                        <button class="btn-delete" onclick="klikHapusPoin(${log.id_log}, '${nim}')">
+                            Hapus
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        // Fungsi klik hapus poin (TETAP SAMA)
+        function klikHapusPoin(log_id, nim) {
+            const sukses = handleDeletePoin(log_id); // Panggil fungsi global
+            if (sukses) {
+                loadRiwayatAdmin(nim); // Muat ulang daftar poin
+            }
+        }
+
+        // Fungsi simpan pelanggaran (TETAP SAMA)
+        function simpanPelanggaran() {
+            const nim = document.getElementById('nim-terpilih').value;
+            const id_pelanggaran = parseInt(document.getElementById('id_pelanggaran').value);
+            const tanggal = document.getElementById('tanggal').value;
+            const keterangan = document.getElementById('keterangan').value;
+
+            if (!nim || !id_pelanggaran || !tanggal) {
+                document.getElementById('admin-error').textContent = 'Error: Data tidak lengkap (Jenis Pelanggaran & Tanggal wajib diisi).';
+                return;
+            }
+
+            const allLogs = JSON.parse(localStorage.getItem('log_pelanggaran'));
+            const maxId = allLogs.reduce((max, log) => log.id_log > max ? log.id_log : max, 0);
+            const newLogId = maxId + 1;
+
+            const newLog = {
+                id_log: newLogId,
+                nim: nim,
+                id_pelanggaran: id_pelanggaran,
+                tanggal: tanggal,
+                keterangan: keterangan
+            };
+
+            allLogs.push(newLog);
+            localStorage.setItem('log_pelanggaran', JSON.stringify(allLogs));
+
+            document.getElementById('admin-success').textContent = 'Pelanggaran berhasil disimpan!';
+            document.getElementById('admin-error').textContent = '';
+            document.getElementById('keterangan').value = '';
+            document.getElementById('id_pelanggaran').value = ''; // Reset dropdown
+
+            // Setelah berhasil menyimpan, refresh daftar poin
+            loadRiwayatAdmin(nim);
+        }
+    </script>
+</body>
+</html>
